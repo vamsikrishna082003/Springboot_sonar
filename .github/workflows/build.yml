@@ -16,7 +16,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Important for SonarCloud analysis
+          fetch-depth: 0  # Required for SonarCloud to detect branches
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -38,5 +38,13 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build and analyze with SonarCloud
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -DskipTests -Dsonar.projectKey=vamsikrishna082003_Springboot_sonar -Dsonar.organization=vamsikrishna082003 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      - name: Build and generate JaCoCo coverage report
+        run: mvn clean verify -DskipTests=false
+
+      - name: SonarCloud Analysis with Coverage
+        run: mvn sonar:sonar \
+          -Dsonar.projectKey=vamsikrishna082003_Springboot_sonar \
+          -Dsonar.organization=vamsikrishna082003 \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml
