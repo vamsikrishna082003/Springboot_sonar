@@ -39,7 +39,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build and generate JaCoCo coverage report
-        run: mvn clean verify -DskipTests=false
+        run: mvn clean verify -Pcoverage
 
       - name: SonarCloud Analysis with Coverage
         run: mvn sonar:sonar \
