@@ -38,13 +38,15 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build and analyze with SonarCloud (multi-module)
+      - name: Run tests and generate JaCoCo coverage report
+        run: mvn clean verify jacoco:report
+
+      - name: Analyze with SonarCloud
         run: |
-          mvn -B clean verify \
-            -DskipTests \
-            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=vamsikrishna082003_Springboot_sonar \
-            -Dsonar.organization=vamsikrishna082003 \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml
+         mvn sonar:sonar \
+         -Dsonar.projectKey=vamsikrishna082003_Springboot_sonar \
+         -Dsonar.organization=vamsikrishna082003 \
+         -Dsonar.host.url=https://sonarcloud.io \
+         -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+         -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml
+
