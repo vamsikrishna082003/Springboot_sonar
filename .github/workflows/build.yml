@@ -41,9 +41,10 @@ jobs:
       - name: Run tests and generate JaCoCo coverage report
         run: mvn clean verify jacoco:report
 
-      - name: Build, test, and analyze with SonarCloud (multi-module)
+      - name: Build and analyze with SonarCloud (multi-module)
         run: |
-         mvn -B clean verify \
+         mvn -B clean install \
+         -DskipTests \
          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
          -Dsonar.projectKey=vamsikrishna082003_Springboot_sonar \
          -Dsonar.organization=vamsikrishna082003 \
